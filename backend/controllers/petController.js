@@ -6,10 +6,13 @@ import { v2 as cloudinary } from "cloudinary";
 // Lấy tất cả thú cưng
 export const getAllPets = async (req, res) => {
   try {
-    const pets = await Pet.find(); // Lấy tất cả thú cưng từ DB
-    res.json(pets);
+    const pets = await Pet.find()
+      .populate("owner", "username") // Populate thông tin chủ thú cưng, chỉ lấy tên
+      .exec();
+
+    res.json(pets); // Trả về danh sách thú cưng đã có tên chủ
   } catch (err) {
-    console.error(err);
+    console.error("Error while fetching pets:", err);
     res.status(500).send("Server error");
   }
 };
@@ -70,26 +73,26 @@ export const addPet = async (req, res) => {
   }
 };
 
-// Xóa thú cưng
 export const deletePet = async (req, res) => {
   try {
-    const pet = await Pet.findById(req.params.petId); // Tìm thú cưng qua ID
+    const pet = await Pet.findById(req.params.id); // Tìm thú cưng qua ID
     if (!pet) {
       return res.status(404).json({ msg: "Pet not found" });
     }
 
+    // Kiểm tra quyền sở hữu thú cưng
     if (pet.owner.toString() !== req.user.id) {
-      // Kiểm tra xem người dùng có phải là chủ của thú cưng không
       return res.status(401).json({ msg: "Not authorized" });
     }
 
     await pet.remove(); // Xóa thú cưng khỏi DB
     res.json({ msg: "Pet removed" });
   } catch (err) {
-    console.error(err);
+    console.error("Error while deleting pet:", err); // Log chi tiết lỗi
     res.status(500).send("Server error");
   }
 };
+
 
 // Cập nhật thông tin thú cưng (nếu cần)
 export const updatePet = async (req, res) => {

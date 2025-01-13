@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 // Lấy tất cả thú cưng (Chưa phân quyền)
-router.get("/all", getAllPets);
+router.get("/allPets", getAllPets);
 
 // Lấy thú cưng của một người dùng theo username
 router.get("/myPets", protectRoute, getPetsByUser);

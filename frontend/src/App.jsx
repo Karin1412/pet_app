@@ -12,6 +12,7 @@ import LoadingSpinner from "./components/common/LoadingSpinner"
 import PetManagementPage from "./pages/pet/PetManagementPage";
 
 
+
 function App() {
   const { data: authUser, isLoading } = useQuery({
 		// we use queryKey to give a unique name to our query and refer to it later
@@ -52,7 +53,7 @@ function App() {
 				<Route path='/notifications' element={authUser ? <NotificationPage /> : <Navigate to='/login' />} />
 				<Route path='/profile/:username' element={authUser ? <ProfilePage /> : <Navigate to='/login' />} />
 				<Route path="/pet-management" element={authUser ? <PetManagementPage /> : <Navigate to="/login" />} />
-
+				<Route exact path="/pets" component={PetManagementPage} />
 			</Routes>
 			{authUser && <RightPanel />}
 			<Toaster />
