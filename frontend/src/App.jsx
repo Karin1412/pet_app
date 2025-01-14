@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query"
 import LoadingSpinner from "./components/common/LoadingSpinner"
 import PetManagementPage from "./pages/pet/PetManagementPage";
 import ChatPage from "./pages/chat/ChatPage"; // Thêm ChatPage vào import
-
+import PetCarePage from "./pages/docs/PetCarePage";
 
 
 function App() {
@@ -56,6 +56,8 @@ function App() {
 				<Route path="/pet-management" element={authUser ? <PetManagementPage /> : <Navigate to="/login" />} />
 				<Route exact path="/pets" component={PetManagementPage} />
 				<Route path="/chat" element={<ChatPage />} /> 
+				<Route path="/pet-care" element={authUser ? <PetCarePage /> : <Navigate to="/login" />} /> {/* Thêm route PetCarePage */}
+
 
 			</Routes>
 			{authUser && <RightPanel />}
