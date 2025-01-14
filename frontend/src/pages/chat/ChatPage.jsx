@@ -3,6 +3,7 @@ import { IoArrowBackOutline, IoSend } from "react-icons/io5";
 
 const ChatPage = () => {
   const [users, setUsers] = useState([]);
+  const [recentChats, setRecentChats] = useState([]); // Danh sách người dùng đã trò chuyện
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -43,6 +44,28 @@ const ChatPage = () => {
     };
     fetchUsers();
   }, []);
+
+  // Fetch recent chats
+  useEffect(() => {
+    const fetchRecentChats = async () => {
+      try {
+        const response = await fetch(`/api/messages/recent`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setRecentChats(data);
+        }
+      } catch (error) {
+        console.error("Error fetching recent chats:", error);
+      }
+    };
+    if (authUser) {
+      fetchRecentChats();
+    }
+  }, [authUser]);
 
   // Fetch conversation
   useEffect(() => {
@@ -138,26 +161,47 @@ const ChatPage = () => {
       {!isChatting && (
         <div className="w-full bg-transparent p-4 shadow-lg overflow-y-auto transition-all min-h-screen h-full">
           <h2 className="text-white font-bold mb-4">Select a User to Chat</h2>
-          <ul className="space-y-4">
+          <div className="flex overflow-x-auto space-x-4">
             {users
               .filter((user) => user._id !== authUser?._id)
               .map((user) => (
-                <li
+                <div
                   key={user._id}
-                  className="cursor-pointer py-2 px-4 rounded-lg hover:bg-gray-600 transition-all bg-gray-800 text-white"
+                  className="cursor-pointer text-center"
                   onClick={() => handleSelectUser(user)}
                 >
-                  <div className="flex items-center w-full">
-                    <img
-                      src={user.profileImg || "/avatar-placeholder.png"}
-                      alt={user.username}
-                      className="w-10 h-10 rounded-full mr-3"
-                    />
-                    <span className="text-lg font-medium">{user.username}</span>
-                  </div>
-                </li>
+                  <img
+                    src={user.profileImg || "/avatar-placeholder.png"}
+                    alt={user.username}
+                    className="w-16 h-16 rounded-full mb-2"
+                  />
+                  <span className="text-white">{user.username}</span>
+                </div>
               ))}
+          </div>
+
+          {/* Recent Chats */}
+           <div className="w-full bg-transparent mt-4 shadow-lg overflow-y-auto transition-all min-h-screen h-full">
+          <h2 className="text-white font-bold mb-4">Recent Chats</h2>
+          <ul className="space-y-4">
+            {recentChats.map((user) => (
+              <li
+                key={user._id}
+                className="cursor-pointer py-2 px-4 rounded-lg hover:bg-gray-600 transition-all bg-gray-800 text-white"
+                onClick={() => handleSelectUser(user)}
+              >
+                <div className="flex items-center w-full">
+                  <img
+                    src={user.profileImg || "/avatar-placeholder.png"}
+                    alt={user.username}
+                    className="w-10 h-10 rounded-full mr-3"
+                  />
+                  <span className="text-lg font-medium">{user.username}</span>
+                </div>
+              </li>
+            ))}
           </ul>
+        </div>
         </div>
       )}
 

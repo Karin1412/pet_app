@@ -60,5 +60,30 @@ const getConversation = async (req, res) => {
       .json({ message: "Error fetching conversation", error });
   }
 };
+export const getRecentChats = async (req, res) => {
+  const senderId = req.user._id;
 
+  try {
+    // Tìm tất cả các cuộc trò chuyện mà người dùng tham gia
+    const conversations = await Conversation.find({
+      participants: { $in: [senderId] },
+    })
+      .populate("participants", "username profileImg")
+      .sort({ updatedAt: -1 }); // Sắp xếp các cuộc trò chuyện theo thời gian cập nhật gần nhất
+
+    // Lọc ra các người tham gia trong mỗi cuộc trò chuyện
+    const recentChats = conversations.map((conversation) => {
+      const otherParticipant = conversation.participants.find(
+        (participant) => participant._id.toString() !== senderId.toString()
+      );
+      return otherParticipant;
+    });
+
+    return res.status(200).json(recentChats);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Error fetching recent chats", error });
+  }
+};
 export { createOrUpdateConversation, getConversation };
