@@ -7,6 +7,7 @@ import { BiLogOut } from "react-icons/bi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { GiDogHouse } from "react-icons/gi"; // Icon for Pet Management
+import { AiOutlineMessage } from "react-icons/ai"; // Icon for Chat
 
 const Sidebar = () => {
   const queryClient = useQueryClient();
@@ -32,6 +33,7 @@ const Sidebar = () => {
       toast.error("Logout failed");
     },
   });
+
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
   return (
@@ -66,6 +68,16 @@ const Sidebar = () => {
             >
               <FaUser className="w-6 h-6" />
               <span className="text-lg hidden md:block">Profile</span>
+            </Link>
+          </li>
+          {/* New Link: Chat */}
+          <li className="flex justify-center md:justify-start">
+            <Link
+              to="/chat"
+              className="flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
+            >
+              <AiOutlineMessage className="w-6 h-6" />
+              <span className="text-lg hidden md:block">Chat</span>
             </Link>
           </li>
           {/* New Link: Pet Management */}

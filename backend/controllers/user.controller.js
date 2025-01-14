@@ -151,3 +151,23 @@ export const updateUser = async (req, res) => {
 		res.status(500).json({ error: error.message });
 	}
 };
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, "username profileImg"); // Lấy username và profileImg
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getAuthUser = async (req, res) => {
+  try {
+    const userId = req.user._id; // Giả sử bạn sử dụng middleware để xác thực người dùng
+    const user = await User.findById(userId).select("-password"); // Lấy thông tin người dùng, bỏ qua mật khẩu
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user); // Trả về thông tin người dùng
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};

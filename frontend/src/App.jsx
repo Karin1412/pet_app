@@ -10,6 +10,7 @@ import Toaster from "react-hot-toast"
 import { useQuery } from "@tanstack/react-query"
 import LoadingSpinner from "./components/common/LoadingSpinner"
 import PetManagementPage from "./pages/pet/PetManagementPage";
+import ChatPage from "./pages/chat/ChatPage"; // Thêm ChatPage vào import
 
 
 
@@ -54,6 +55,8 @@ function App() {
 				<Route path='/profile/:username' element={authUser ? <ProfilePage /> : <Navigate to='/login' />} />
 				<Route path="/pet-management" element={authUser ? <PetManagementPage /> : <Navigate to="/login" />} />
 				<Route exact path="/pets" component={PetManagementPage} />
+				<Route path="/chat" element={<ChatPage />} /> 
+
 			</Routes>
 			{authUser && <RightPanel />}
 			<Toaster />
