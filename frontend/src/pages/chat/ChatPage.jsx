@@ -163,7 +163,7 @@ const ChatPage = () => {
 
       {/* Chat Area */}
       {isChatting && selectedUser && (
-        <div className="flex flex-col h-[780px]">
+        <div className="flex flex-col h-[820px]">
           <div className="flex-1 bg-transparent p-6 overflow-y-auto ">
             {messages.length > 0 ? (
               messages.map((msg, index) => {
